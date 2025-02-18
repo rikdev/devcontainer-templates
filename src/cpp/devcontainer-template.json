@@ -1,0 +1,9 @@
+{
+	"id": "cpp",
+	"version": "1.0.0",
+	"name": "C++",
+	"description": "Develop C++ applications on Linux.",
+	"publisher": "rikdev",
+	"licenseURL": "https://github.com/rikdev/devcontainer-templates/blob/master/LICENSE",
+	"platforms": ["C++"]
+}
