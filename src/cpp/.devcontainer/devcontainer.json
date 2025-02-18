@@ -1,0 +1,13 @@
+{
+	"dockerComposeFile": ["compose.yaml", "compose.vscode.yaml"],
+	"service": "devcontainer-x11-cpp",
+	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-vscode.cpptools-extension-pack",
+				"ms-vscode.makefile-tools"
+			]
+		}
+	}
+}
