@@ -1,0 +1,35 @@
+services:
+  devcontainer-cpp:
+    build:
+      dockerfile: cpp.Dockerfile
+      network: host
+    network_mode: host
+    working_dir: &workdir /workspaces/${PROJECT_NAME-}
+    volumes:
+      - type: bind
+        source: ..
+        target: *workdir
+      - type: bind
+        source: profile
+        target: /home/user
+      - type: bind
+        source: ~/.ssh
+        target: /home/user/.ssh
+    # Required for ptrace-based debuggers like C++, Go, and Rust
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - seccomp:unconfined
+
+  devcontainer-x11-cpp:
+    extends:
+      service: devcontainer-cpp
+    devices:
+      - /dev/dri:/dev/dri
+    volumes:
+      - type: bind
+        source: /tmp/.X11-unix
+        target: /tmp/.X11-unix
+      - type: bind
+        source: ~/.Xauthority
+        target: /home/user/.Xauthority

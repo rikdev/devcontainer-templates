@@ -1,0 +1,15 @@
+{
+	"dockerComposeFile": ["compose.yaml", "compose.vscode.yaml"],
+	"service": "devcontainer-x11-cpp",
+	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"editorconfig.editorconfig",
+				"ms-azuretools.vscode-docker",
+				"ms-vscode.cpptools-extension-pack",
+				"streetsidesoftware.code-spell-checker-russian"
+			]
+		}
+	}
+}
