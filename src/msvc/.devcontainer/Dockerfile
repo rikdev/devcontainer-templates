@@ -30,7 +30,9 @@ RUN \
 
 ENV CCACHE_DIR='C:\.ccache' \
     CCACHE_TEMPDIR='C:\ccache-tmp' \
-    CONAN_HOME='C:\.conan2'
+    CONAN_HOME='C:\.conan2' \
+    CARGO_HOME='C:\.cargo' \
+    RUSTUP_HOME='C:\.rustup'
 
 # Updating utilities should't change the mtime of the VC
 RUN \
@@ -88,6 +90,20 @@ RUN \
         'Path', \
         [Environment]::GetEnvironmentVariable('Path', [EnvironmentVariableTarget]::Machine) + \";$env:ProgramFiles\Git\bin\", \
         [EnvironmentVariableTarget]::Machine); \
+\
+    Write-Host 'Installing Rust...'; \
+    Download-File \
+        -Uri 'https://static.rust-lang.org/rustup/archive/1.27.1/x86_64-pc-windows-msvc/rustup-init.exe' \
+        -OutFile 'rustup-init.exe' \
+        -Hash '193d6c727e18734edbf7303180657e96e9d5a08432002b4e6c5bbe77c60cb3e8'; \
+    Start-Process -Wait -NoNewWindow \
+        -FilePath 'rustup-init.exe' \
+        -ArgumentList \
+            '-y', \
+            '--profile minimal', \
+            '--target i686-pc-windows-msvc x86_64-pc-windows-msvc', \
+            '--default-toolchain 1.85.0'; \
+    Remove-Item -Path 'rustup-init.exe'; \
 \
     Write-Host 'Installing Python...'; \
     Download-File \
