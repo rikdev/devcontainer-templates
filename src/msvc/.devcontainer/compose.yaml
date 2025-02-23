@@ -1,0 +1,9 @@
+services:
+  devcontainer-msvc:
+    build:
+      dockerfile: Dockerfile
+    working_dir: &workdir C:/workspaces/${PROJECT_NAME-}
+    volumes:
+      - type: bind
+        source: ..
+        target: *workdir
