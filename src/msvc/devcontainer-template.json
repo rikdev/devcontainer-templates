@@ -1,0 +1,9 @@
+{
+	"id": "msvc",
+	"version": "1.0.0",
+	"name": "Visual C++",
+	"description": "Develop C++ applications on Windows with Microsoft Visual C++.",
+	"publisher": "rikdev",
+	"licenseURL": "https://github.com/rikdev/devcontainer-templates/blob/master/LICENSE",
+	"platforms": ["C++"]
+}
