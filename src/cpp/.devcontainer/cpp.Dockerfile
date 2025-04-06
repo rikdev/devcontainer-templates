@@ -35,6 +35,7 @@ RUN <<EOF
     # console utilities
     sudo pacman --sync --noconfirm --needed --noconfirm\
         bash-completion \
+        diffutils \
         gdb \
         git \
         git-lfs \
