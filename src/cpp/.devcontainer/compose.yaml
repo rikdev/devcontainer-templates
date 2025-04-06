@@ -1,7 +1,7 @@
 services:
   devcontainer-cpp:
     build:
-      dockerfile: cpp.Dockerfile
+      dockerfile: ${templateOption:imageVariant}.Dockerfile
       network: host
       pull: true
     network_mode: host

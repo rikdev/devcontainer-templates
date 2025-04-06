@@ -5,5 +5,16 @@
 	"description": "Develop C++ applications on Linux.",
 	"publisher": "rikdev",
 	"licenseURL": "https://github.com/rikdev/devcontainer-templates/blob/master/LICENSE",
-	"platforms": ["C++"]
+	"platforms": ["C++"],
+	"options": {
+		"imageVariant": {
+			"type": "string",
+			"description": "Arch Linux / Debian base image:",
+			"proposals": [
+				"archlinux",
+				"debian"
+			],
+			"default": "debian"
+		}
+	}
 }
