@@ -5,6 +5,9 @@ ARG USER_UID=1000
 ARG USER_GID=${USER_UID}
 
 RUN <<EOF
+    set -eu
+    set -o pipefail
+
     groupadd --gid ${USER_GID} ${USER_NAME}
     useradd --uid ${USER_UID} --gid ${USER_GID} --create-home ${USER_NAME}
     # Add sudo support.
@@ -17,6 +20,9 @@ EOF
 USER ${USER_NAME}
 
 RUN <<EOF
+    set -eu
+    set -o pipefail
+
     # build tools
     sudo pacman --sync --refresh --sysupgrade --noconfirm
     sudo pacman --sync --noconfirm --needed \
