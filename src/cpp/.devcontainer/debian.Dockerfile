@@ -1,4 +1,4 @@
-FROM debian:bookworm
+FROM debian:testing
 
 ARG USER_NAME=user
 ARG USER_UID=1000
@@ -22,7 +22,6 @@ USER ${USER_NAME}
 RUN <<EOF
     set -eu
 
-    echo 'deb http://deb.debian.org/debian/ testing main' | sudo tee /etc/apt/sources.list.d/testing.list
     sudo apt-get update
 
     # build tools
