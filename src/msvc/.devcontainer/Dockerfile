@@ -5,7 +5,7 @@ SHELL ["powershell", "-Command", \
     $ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue'; \
     function Download-File($Uri, $OutFile, $Hash) { \
         Invoke-WebRequest -Uri $Uri -OutFile $OutFile; \
-        if ((Get-FileHash -Path $OutFile -Algorithm SHA256).Hash -ne $Hash) { \
+        if (($null -ne $Hash) -and ((Get-FileHash -Path $OutFile -Algorithm SHA256).Hash -ne $Hash)) { \
             Write-Error \\\"Invalid hash for file '$OutFile'\\\" \
         }; \
     };"]
@@ -13,8 +13,7 @@ SHELL ["powershell", "-Command", \
 RUN \
     Download-File \
         -Uri 'https://aka.ms/vs/17/release/vs_buildtools.exe' \
-        -OutFile 'vs_buildtools.exe' \
-        -Hash 'efc5cbf61e84d9762ac34da1ebea1802389b77233e9883ea1889d75f3d8b7e61'; \
+        -OutFile 'vs_buildtools.exe'; \
     Start-Process -Wait -NoNewWindow \
         -FilePath 'vs_buildtools.exe' \
         -ArgumentList \
