@@ -1,5 +1,7 @@
 FROM mcr.microsoft.com/windows/servercore:ltsc2025
 
+ARG USER_NAME=User
+
 SHELL ["powershell", "-Command", \
     "Set-StrictMode -Version 3.0; \
     $ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue'; \
@@ -9,6 +11,39 @@ SHELL ["powershell", "-Command", \
             Write-Error \\\"Invalid hash for file '$OutFile'\\\" \
         }; \
     };"]
+
+# SSH server for remote development tools
+RUN \
+    Write-Host 'Configuring SSH server...'; \
+    Set-Service -Name 'sshd' -StartupType Automatic; \
+    # SSH authentication is disabled for the ${USER_NAME} account,
+    # so container access security must be enforced externally
+    Add-Content \
+        -Path \"$env:ProgramData/ssh/sshd_config\" \
+        -Value ( \
+            \"AllowUsers $env:USER_NAME`n\" + \
+            \"AuthenticationMethods none`n\" + \
+            \"PermitEmptyPasswords yes`n\"); \
+\
+    Write-Host 'Creating new user...'; \
+    New-LocalUser -Name \"$env:USER_NAME\" -NoPassword; \
+    Add-LocalGroupMember -Group 'Administrators' -Member \"$env:USER_NAME\"; \
+    &{ \
+        $user = [ADSI]\"WinNT://./$env:USER_NAME,User\"; \
+        $user.PasswordExpired = 0; \
+        $user.SetInfo(); \
+    } \
+    # Create home directory
+    Start-Process -Wait -NoNewWindow \
+        -FilePath 'powershell' \
+        -ArgumentList '-NoLogo -NoProfile -NonInteractive -Command \"\"' \
+        -Credential \
+            (New-Object \
+                -TypeName 'System.Management.Automation.PSCredential' \
+                -ArgumentList \"$env:USER_NAME\", (New-Object System.Security.SecureString));
+EXPOSE 22
+
+USER ${USER_NAME}
 
 RUN \
     Download-File \
@@ -104,8 +139,6 @@ RUN \
     Start-Process -Wait -NoNewWindow \
         -FilePath 'pip' \
         -ArgumentList 'install --no-cache-dir conan==2.20.1';
-
-USER ContainerUser
 
 ENTRYPOINT [ \
     "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/Common7/Tools/VsDevCmd.bat", "-host_arch=amd64", \

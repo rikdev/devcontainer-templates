@@ -2,8 +2,13 @@ services:
   devcontainer-msvc:
     build:
       dockerfile: Dockerfile
+    ports:
+      - 22
     working_dir: &workdir C:/workspaces/${PROJECT_NAME-}
     volumes:
       - type: bind
         source: ..
         target: *workdir
+      - type: bind
+        source: ~/.ssh
+        target: C:/Users/User/.ssh
