@@ -18,7 +18,7 @@ RUN \
         -FilePath 'vs_buildtools.exe' \
         -ArgumentList \
             # https://docs.microsoft.com/en-us/visualstudio/install/workload-component-id-vs-build-tools
-            '--add Microsoft.VisualStudio.Component.VC.14.43.17.13.x86.x64', \
+            '--add Microsoft.VisualStudio.Component.VC.14.44.17.14.x86.x64', \
             '--add Microsoft.VisualStudio.Component.VC.Tools.x86.x64', \
             '--add Microsoft.VisualStudio.Component.Windows11SDK.26100', \
             '--quiet', '--wait', '--norestart', '--nocache'; \
@@ -36,9 +36,9 @@ ENV CCACHE_DIR='C:\.ccache' \
 RUN \
     Write-Host 'Installing CMake...'; \
     Download-File \
-        -Uri 'https://github.com/Kitware/CMake/releases/download/v3.31.5/cmake-3.31.5-windows-x86_64.msi' \
+        -Uri 'https://github.com/Kitware/CMake/releases/download/v4.0.4/cmake-4.0.4-windows-x86_64.msi' \
         -OutFile 'cmake.msi' \
-        -Hash '97e249f199b86c1fc56dbc5e80b1a9e1f912c34dfbf8e7933ba1944e3034455f'; \
+        -Hash 'fb2b269b7a52e6deff4d8e36f7ab8d1b13c52cdc0577693e3382858d0527f8ca'; \
     Start-Process -Wait -NoNewWindow \
         -FilePath 'msiexec' \
         -ArgumentList '/quiet /norestart /package cmake.msi ADD_CMAKE_TO_PATH=System'; \
@@ -46,9 +46,9 @@ RUN \
 \
     Write-Host 'Installing Ninja...'; \
     Download-File \
-        -Uri 'https://github.com/ninja-build/ninja/releases/download/v1.12.1/ninja-win.zip' \
+        -Uri 'https://github.com/ninja-build/ninja/releases/download/v1.13.1/ninja-win.zip' \
         -OutFile 'ninja.zip' \
-        -Hash 'f550fec705b6d6ff58f2db3c374c2277a37691678d6aba463adcbb129108467a'; \
+        -Hash '26a40fa8595694dec2fad4911e62d29e10525d2133c9a4230b66397774ae25bf'; \
     Expand-Archive -Path 'ninja.zip' -DestinationPath \"$env:ProgramFiles/Ninja\"; \
     Remove-Item -Path 'ninja.zip'; \
     [Environment]::SetEnvironmentVariable( \
@@ -58,9 +58,9 @@ RUN \
 \
     Write-Host 'Installing ccache...'; \
     Download-File \
-        -Uri 'https://github.com/ccache/ccache/releases/download/v4.10.2/ccache-4.10.2-windows-x86_64.zip' \
+        -Uri 'https://github.com/ccache/ccache/releases/download/v4.12/ccache-4.12-windows-x86_64.zip' \
         -OutFile 'ccache.zip' \
-        -Hash '6252f081876a9a9f700fae13a5aec5d0d486b28261d7f1f72ac11c7ad9df4da9'; \
+        -Hash '85c963b154dcf5e38dc6839d660218433a3b0b86387c302675d236e17ae7220d'; \
     Expand-Archive -Path 'ccache.zip' -DestinationPath \"$env:ProgramFiles\"; \
     Move-Item -Path \"$env:ProgramFiles/ccache-*\" -Destination \"$env:ProgramFiles/ccache\"; \
     Remove-Item -Path 'ccache.zip', \"$env:ProgramFiles/ccache/*\" -Exclude '*.exe' -Recurse -Force; \
@@ -71,9 +71,9 @@ RUN \
 \
     Write-Host 'Installing Git...'; \
     Download-File \
-        -Uri 'https://github.com/git-for-windows/git/releases/download/v2.48.1.windows.1/Git-2.48.1-64-bit.tar.bz2' \
+        -Uri 'https://github.com/git-for-windows/git/releases/download/v2.51.0.windows.1/Git-2.51.0-64-bit.tar.bz2' \
         -OutFile 'git.tar.bz2' \
-        -Hash 'ec46b07acc431dcbe64ef5665582b934530b09b8f7ef3b39ad912832a3fefa6b'; \
+        -Hash '151bddf70e1115631e62bb05535b5e6726b3813e1f363953ad6b4e6697d96933'; \
     New-Item -Path \"$env:ProgramFiles\" -Name 'Git' -ItemType 'directory'; \
     Start-Process -Wait -NoNewWindow \
         -FilePath 'tar' \
@@ -91,9 +91,9 @@ RUN \
 \
     Write-Host 'Installing Python...'; \
     Download-File \
-        -Uri 'https://www.python.org/ftp/python/3.13.2/python-3.13.2-amd64.exe' \
+        -Uri 'https://www.python.org/ftp/python/3.13.7/python-3.13.7-amd64.exe' \
         -OutFile 'python-installer.exe' \
-        -Hash '9aaa1075d0bd3e8abd0623d2d05de692ff00780579e1b232f259028bac19bb51'; \
+        -Hash 'b12e2e82461ac8e51fc43289050bc8eb937a32d84ce4d242e2c88258c37cf2bb'; \
     Start-Process -Wait -NoNewWindow \
         -FilePath 'python-installer.exe' \
         -ArgumentList '/quiet InstallAllUsers=1 PrependPath=1 Shortcuts=0 Include_doc=0 Include_test=0'; \
@@ -103,7 +103,7 @@ RUN \
     Write-Host 'Installing Conan...'; \
     Start-Process -Wait -NoNewWindow \
         -FilePath 'pip' \
-        -ArgumentList 'install --no-cache-dir conan==2.12.2';
+        -ArgumentList 'install --no-cache-dir conan==2.20.1';
 
 USER ContainerUser
 
