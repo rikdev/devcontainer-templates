@@ -1,0 +1,9 @@
+services:
+  devcontainer-msvc:
+    volumes:
+      - type: volume
+        source: devcontainer-msvc-vscode-server
+        target: C:/Users/User/.vscode-server
+
+volumes:
+  devcontainer-msvc-vscode-server:
