@@ -12,3 +12,9 @@ services:
       - type: bind
         source: ~/.ssh
         target: C:/Users/User/.ssh
+      - type: volume
+        source: devcontainer-msvc-appdata
+        target: C:/Users/User/AppData
+
+volumes:
+  devcontainer-msvc-appdata:
