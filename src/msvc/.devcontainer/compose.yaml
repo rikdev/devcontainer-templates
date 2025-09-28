@@ -2,6 +2,8 @@ services:
   devcontainer-msvc:
     build:
       dockerfile: Dockerfile
+      isolation: process
+    isolation: process
     ports:
       - 22
     working_dir: &workdir C:/workspaces/${PROJECT_NAME-}
