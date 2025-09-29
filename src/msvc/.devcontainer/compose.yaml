@@ -3,6 +3,8 @@ services:
     build:
       dockerfile: Dockerfile
       isolation: process
+    environment:
+      HOME: C:/Users/User/AppData/Home
     isolation: process
     ports:
       - 22
