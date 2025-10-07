@@ -140,7 +140,19 @@ RUN \
         -FilePath 'pip' \
         -ArgumentList 'install --no-cache-dir conan==2.20.1';
 
+# console utilities
+RUN \
+    Write-Host 'Installing PowerShell...'; \
+    Download-File \
+        -Uri 'https://github.com/PowerShell/PowerShell/releases/download/v7.5.3/PowerShell-7.5.3-win-x64.msi' \
+        -OutFile 'powershell.msi' \
+        -Hash '28e23a6e3a18662b73e6fb267855f31786fb95ec943111de9e9e1338844106b4'; \
+    Start-Process -Wait -NoNewWindow \
+        -FilePath 'msiexec' \
+        -ArgumentList '/quiet /norestart /package powershell.msi'; \
+    Remove-Item -Path 'powershell.msi';
+
 ENTRYPOINT [ \
     "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/Common7/Tools/VsDevCmd.bat", "-host_arch=amd64", \
-    "-arch=amd64", "&&", "powershell.exe", "-NoLogo", "-ExecutionPolicy", "Bypass" \
+    "-arch=amd64", "&&", "pwsh.exe", "-NoLogo", "-ExecutionPolicy", "Bypass" \
 ]
