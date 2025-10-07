@@ -150,7 +150,20 @@ RUN \
     Start-Process -Wait -NoNewWindow \
         -FilePath 'msiexec' \
         -ArgumentList '/quiet /norestart /package powershell.msi'; \
-    Remove-Item -Path 'powershell.msi';
+    Remove-Item -Path 'powershell.msi'; \
+\
+    Write-Host 'Installing Microsoft Edit...'; \
+    Download-File \
+        -Uri 'https://github.com/microsoft/edit/releases/download/v1.2.0/edit-1.2.0-x86_64-windows.zip' \
+        -OutFile 'edit.zip' \
+        -Hash '49f52065bf88f01928e2911b04705b34a0c20d9ec09eb6241452c9d5dd166fc4'; \
+    Expand-Archive -Path 'edit.zip' -DestinationPath \"$env:ProgramFiles\"; \
+    Move-Item -Path \"$env:ProgramFiles/edit-*\" -Destination \"$env:ProgramFiles/Edit\"; \
+    Remove-Item -Path 'Edit.zip', \"$env:ProgramFiles/Edit/*\" -Exclude '*.exe' -Recurse -Force; \
+    [Environment]::SetEnvironmentVariable( \
+        'Path', \
+        [Environment]::GetEnvironmentVariable('Path', [EnvironmentVariableTarget]::Machine) + \";$env:ProgramFiles\Edit\", \
+        [EnvironmentVariableTarget]::Machine);
 
 ENTRYPOINT [ \
     "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/Common7/Tools/VsDevCmd.bat", "-host_arch=amd64", \
