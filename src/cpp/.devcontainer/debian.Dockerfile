@@ -27,6 +27,7 @@ RUN <<EOF
     # build tools
     sudo apt-get install -y --no-install-recommends \
         clang \
+        clang-tidy \
         clang-tools \
         cmake \
         g++ \
@@ -46,6 +47,7 @@ RUN <<EOF
         gdb \
         git \
         git-lfs \
+        iproute2 \
         less \
         lldb \
         locales \
