@@ -47,8 +47,10 @@ USER ${USER_NAME}
 
 RUN \
     Download-File \
-        -Uri 'https://aka.ms/vs/17/release/vs_buildtools.exe' \
-        -OutFile 'vs_buildtools.exe'; \
+        # https://learn.microsoft.com/en-us/visualstudio/releases/2026/release-history#release-dates-and-build-numbers
+        -Uri 'https://download.visualstudio.microsoft.com/download/pr/e2958987-8ee9-4455-a511-38b57476c363/295f41e6627b8c6cb651d90fec24fa5718116cbe8a5511c35c84a7c356712d9f/vs_BuildTools.exe' \
+        -OutFile 'vs_buildtools.exe' \
+        -Hash '295f41e6627b8c6cb651d90fec24fa5718116cbe8a5511c35c84a7c356712d9f'; \
     Start-Process -Wait -NoNewWindow \
         -FilePath 'vs_buildtools.exe' \
         -ArgumentList \
@@ -61,7 +63,7 @@ RUN \
     New-Item \
         -Path 'C:/BuildTools' \
         -ItemType SymbolicLink \
-        -Value \"${env:ProgramFiles(x86)}/Microsoft Visual Studio/2022/BuildTools\"
+        -Value \"${env:ProgramFiles(x86)}/Microsoft Visual Studio/18/BuildTools\"
 
 ENV CCACHE_DIR='C:\.ccache' \
     CCACHE_TEMPDIR='C:\ccache-tmp' \
@@ -71,9 +73,9 @@ ENV CCACHE_DIR='C:\.ccache' \
 RUN \
     Write-Host 'Installing CMake...'; \
     Download-File \
-        -Uri 'https://github.com/Kitware/CMake/releases/download/v4.0.4/cmake-4.0.4-windows-x86_64.msi' \
+        -Uri 'https://github.com/Kitware/CMake/releases/download/v4.2.3/cmake-4.2.3-windows-x86_64.msi' \
         -OutFile 'cmake.msi' \
-        -Hash 'fb2b269b7a52e6deff4d8e36f7ab8d1b13c52cdc0577693e3382858d0527f8ca'; \
+        -Hash 'aa84ae115fc962c6691ec972548c7f7435bd9e7696c9d0487c8bd3a285277ed6'; \
     Start-Process -Wait -NoNewWindow \
         -FilePath 'msiexec' \
         -ArgumentList '/quiet /norestart /package cmake.msi ADD_CMAKE_TO_PATH=System'; \
@@ -81,9 +83,9 @@ RUN \
 \
     Write-Host 'Installing Ninja...'; \
     Download-File \
-        -Uri 'https://github.com/ninja-build/ninja/releases/download/v1.13.1/ninja-win.zip' \
+        -Uri 'https://github.com/ninja-build/ninja/releases/download/v1.13.2/ninja-win.zip' \
         -OutFile 'ninja.zip' \
-        -Hash '26a40fa8595694dec2fad4911e62d29e10525d2133c9a4230b66397774ae25bf'; \
+        -Hash '07fc8261b42b20e71d1720b39068c2e14ffcee6396b76fb7a795fb460b78dc65'; \
     Expand-Archive -Path 'ninja.zip' -DestinationPath \"$env:ProgramFiles/Ninja\"; \
     Remove-Item -Path 'ninja.zip'; \
     [Environment]::SetEnvironmentVariable( \
@@ -93,9 +95,9 @@ RUN \
 \
     Write-Host 'Installing ccache...'; \
     Download-File \
-        -Uri 'https://github.com/ccache/ccache/releases/download/v4.12/ccache-4.12-windows-x86_64.zip' \
+        -Uri 'https://github.com/ccache/ccache/releases/download/v4.13.1/ccache-4.13.1-windows-x86_64.zip' \
         -OutFile 'ccache.zip' \
-        -Hash '85c963b154dcf5e38dc6839d660218433a3b0b86387c302675d236e17ae7220d'; \
+        -Hash '1c78a0b816a3174d4b170b96294e016a21fb4a577dfd8361e7322f77f85c6348'; \
     Expand-Archive -Path 'ccache.zip' -DestinationPath \"$env:ProgramFiles\"; \
     Move-Item -Path \"$env:ProgramFiles/ccache-*\" -Destination \"$env:ProgramFiles/ccache\"; \
     Remove-Item -Path 'ccache.zip', \"$env:ProgramFiles/ccache/*\" -Exclude '*.exe' -Recurse -Force; \
@@ -106,9 +108,9 @@ RUN \
 \
     Write-Host 'Installing Git...'; \
     Download-File \
-        -Uri 'https://github.com/git-for-windows/git/releases/download/v2.51.0.windows.1/Git-2.51.0-64-bit.tar.bz2' \
+        -Uri 'https://github.com/git-for-windows/git/releases/download/v2.53.0.windows.2/Git-2.53.0.2-64-bit.tar.bz2' \
         -OutFile 'git.tar.bz2' \
-        -Hash '151bddf70e1115631e62bb05535b5e6726b3813e1f363953ad6b4e6697d96933'; \
+        -Hash 'b17726d9b0041463a9e7b2bb98103cd6a18447d73b65e7b60c43e7d2fb5dea22'; \
     New-Item -Path \"$env:ProgramFiles\" -Name 'Git' -ItemType 'directory'; \
     Start-Process -Wait -NoNewWindow \
         -FilePath 'tar' \
@@ -126,9 +128,9 @@ RUN \
 \
     Write-Host 'Installing Python...'; \
     Download-File \
-        -Uri 'https://www.python.org/ftp/python/3.13.7/python-3.13.7-amd64.exe' \
+        -Uri 'https://www.python.org/ftp/python/3.13.12/python-3.13.12-amd64.exe' \
         -OutFile 'python-installer.exe' \
-        -Hash 'b12e2e82461ac8e51fc43289050bc8eb937a32d84ce4d242e2c88258c37cf2bb'; \
+        -Hash '96159fcb523ae404b707186a75b4104ee23851e476a5e838e14584cf1e03f981'; \
     Start-Process -Wait -NoNewWindow \
         -FilePath 'python-installer.exe' \
         -ArgumentList '/quiet InstallAllUsers=1 PrependPath=1 Shortcuts=0 Include_doc=0 Include_test=0'; \
@@ -138,15 +140,15 @@ RUN \
     Write-Host 'Installing Conan...'; \
     Start-Process -Wait -NoNewWindow \
         -FilePath 'pip' \
-        -ArgumentList 'install --no-cache-dir conan==2.20.1';
+        -ArgumentList 'install --no-cache-dir conan==2.26.2';
 
 # console utilities
 RUN \
     Write-Host 'Installing PowerShell...'; \
     Download-File \
-        -Uri 'https://github.com/PowerShell/PowerShell/releases/download/v7.5.3/PowerShell-7.5.3-win-x64.msi' \
+        -Uri 'https://github.com/PowerShell/PowerShell/releases/download/v7.5.5/PowerShell-7.5.5-win-x64.msi' \
         -OutFile 'powershell.msi' \
-        -Hash '28e23a6e3a18662b73e6fb267855f31786fb95ec943111de9e9e1338844106b4'; \
+        -Hash 'b2ac56b7639e2b259bb78bab077555d76f2a5eec6c516690d63de36bc1d6ca25'; \
     Start-Process -Wait -NoNewWindow \
         -FilePath 'msiexec' \
         -ArgumentList '/quiet /norestart /package powershell.msi'; \
@@ -154,9 +156,9 @@ RUN \
 \
     Write-Host 'Installing Microsoft Edit...'; \
     Download-File \
-        -Uri 'https://github.com/microsoft/edit/releases/download/v1.2.0/edit-1.2.0-x86_64-windows.zip' \
+        -Uri 'https://github.com/microsoft/edit/releases/download/v1.2.1/edit-1.2.1-x86_64-windows.zip' \
         -OutFile 'edit.zip' \
-        -Hash '49f52065bf88f01928e2911b04705b34a0c20d9ec09eb6241452c9d5dd166fc4'; \
+        -Hash 'be3affb7e5e0cd856fc0fb9c8b2004e9fbbc364e69797f7c2e9d8fcc94bfc4ff'; \
     Expand-Archive -Path 'edit.zip' -DestinationPath \"$env:ProgramFiles\"; \
     Move-Item -Path \"$env:ProgramFiles/edit-*\" -Destination \"$env:ProgramFiles/Edit\"; \
     Remove-Item -Path 'Edit.zip', \"$env:ProgramFiles/Edit/*\" -Exclude '*.exe' -Recurse -Force; \
@@ -166,6 +168,6 @@ RUN \
         [EnvironmentVariableTarget]::Machine);
 
 ENTRYPOINT [ \
-    "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/Common7/Tools/VsDevCmd.bat", "-host_arch=amd64", \
+    "C:/Program Files (x86)/Microsoft Visual Studio/18/BuildTools/Common7/Tools/VsDevCmd.bat", "-host_arch=amd64", \
     "-arch=amd64", "&&", "pwsh.exe", "-NoLogo", "-ExecutionPolicy", "Bypass" \
 ]
