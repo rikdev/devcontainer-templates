@@ -4,6 +4,8 @@ ARG USER_NAME=user
 ARG USER_UID=1000
 ARG USER_GID=${USER_UID}
 
+ENV LANG=C.UTF-8
+
 RUN <<EOF
     set -eu
 
@@ -50,12 +52,9 @@ RUN <<EOF
         iproute2 \
         less \
         lldb \
-        locales \
         openssh-client \
         vim
 
-    sudo sed --in-place 's/^# \(en_US\.UTF-8\)/\1/' /etc/locale.gen
-    sudo locale-gen
     echo '. /usr/share/bash-completion/bash_completion' | sudo tee --append /etc/bash.bashrc
 
     sudo rm -rf /var/lib/apt/lists/*
