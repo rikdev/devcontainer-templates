@@ -1,0 +1,26 @@
+name: "Build Devcontainer Docker Images"
+
+on:
+  workflow_dispatch
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            context: src/cpp/.devcontainer
+            dockerfile: debian.Dockerfile
+          - os: ubuntu-latest
+            context: src/cpp/.devcontainer
+            dockerfile: archlinux.Dockerfile
+          - os: windows-latest
+            context: src/msvc/.devcontainer
+            dockerfile: Dockerfile
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: docker/build-push-action@v7
+        with:
+          context: ${{ matrix.context }}
+          file: ${{ matrix.dockerfile }}
+          push: ${{ github.ref_name == 'master' }}
