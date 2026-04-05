@@ -1,0 +1,49 @@
+name: "Build Devcontainer Docker Images"
+
+on:
+  workflow_dispatch
+
+jobs:
+  build:
+    permissions:
+      contents: read
+      packages: write
+
+    strategy:
+      matrix:
+        include:
+          - name: archlinux
+            os: ubuntu-latest
+            context: src/cpp/.devcontainer
+            dockerfile: archlinux.Dockerfile
+          - name: debian
+            os: ubuntu-latest
+            context: src/cpp/.devcontainer
+            dockerfile: debian.Dockerfile
+          - name: msvc
+            os: windows-latest
+            context: src/msvc/.devcontainer
+            dockerfile: Dockerfile
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Log into registry
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build the Docker image '${{ matrix.name }}'
+        shell: bash
+        working-directory: ${{ matrix.context }}
+        run: |
+          docker image build --pull --tag "${IMAGE_NAME}" --file '${{ matrix.dockerfile }}' .
+          docker image push "${IMAGE_NAME}"
+        env:
+          IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/devcontainers/cpp:${{ matrix.name }}
