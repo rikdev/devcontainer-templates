@@ -4,6 +4,7 @@ services:
       dockerfile: ${IMAGE_VARIANT}.Dockerfile
       network: host
       pull: true
+    hostname: devcontainer
     network_mode: host
     working_dir: &workdir /workspaces/${PROJECT_NAME-}
     volumes:

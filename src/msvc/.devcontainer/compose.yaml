@@ -5,6 +5,7 @@ services:
       isolation: process
     environment:
       HOME: C:/Users/User/AppData/Home
+    hostname: devcontainer
     isolation: process
     ports:
       - 22
