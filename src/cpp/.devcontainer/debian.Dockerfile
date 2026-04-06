@@ -19,15 +19,13 @@ RUN <<EOF
     chmod 0440 /etc/sudoers.d/${USER_NAME}
 EOF
 
-USER ${USER_NAME}
-
 RUN <<EOF
     set -eu
 
-    sudo apt-get update
+    apt-get update
 
     # build tools
-    sudo apt-get install -y --no-install-recommends \
+    apt-get install -y --no-install-recommends \
         clang \
         clang-tidy \
         clang-tools \
@@ -40,10 +38,10 @@ RUN <<EOF
         python-is-python3 \
         python3-pip
 
-    sudo pip install --no-cache --break-system-packages conan
+    pip install --no-cache --break-system-packages conan
 
     # console utilities
-    sudo apt-get install -y --no-install-recommends \
+    apt-get install -y --no-install-recommends \
         bash-completion \
         clang-format \
         gdb \
@@ -55,7 +53,9 @@ RUN <<EOF
         openssh-client \
         vim
 
-    echo '. /usr/share/bash-completion/bash_completion' | sudo tee --append /etc/bash.bashrc
+    echo '. /usr/share/bash-completion/bash_completion' >> /etc/bash.bashrc
 
-    sudo rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/*
 EOF
+
+USER ${USER_NAME}

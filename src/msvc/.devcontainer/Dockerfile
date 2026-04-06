@@ -43,8 +43,6 @@ RUN \
                 -ArgumentList \"$env:USER_NAME\", (New-Object System.Security.SecureString));
 EXPOSE 22
 
-USER ${USER_NAME}
-
 RUN \
     Download-File \
         # https://learn.microsoft.com/en-us/visualstudio/releases/2026/release-history#release-dates-and-build-numbers
@@ -171,3 +169,5 @@ ENTRYPOINT [ \
     "C:/Program Files (x86)/Microsoft Visual Studio/18/BuildTools/Common7/Tools/VsDevCmd.bat", "-host_arch=amd64", \
     "-arch=amd64", "&&", "pwsh.exe", "-NoLogo", "-ExecutionPolicy", "Bypass" \
 ]
+
+USER ${USER_NAME}

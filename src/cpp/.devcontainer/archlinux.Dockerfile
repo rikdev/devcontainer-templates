@@ -16,15 +16,13 @@ RUN <<EOF
     chmod 0440 /etc/sudoers.d/${USER_NAME}
 EOF
 
-USER ${USER_NAME}
-
 RUN <<EOF
     set -o errexit -o nounset -o pipefail
 
-    sudo pacman --sync --refresh --sysupgrade --noconfirm
+    pacman --sync --refresh --sysupgrade --noconfirm
 
     # build tools
-    sudo pacman --sync --noconfirm --needed \
+    pacman --sync --noconfirm --needed \
         clang \
         cmake \
         gcc \
@@ -35,10 +33,10 @@ RUN <<EOF
         python \
         python-pip
 
-    sudo pip install --no-cache --break-system-packages conan
+    pip install --no-cache --break-system-packages conan
 
     # console utilities
-    sudo pacman --sync --noconfirm --needed \
+    pacman --sync --noconfirm --needed \
         bash-completion \
         diffutils \
         gdb \
@@ -49,5 +47,7 @@ RUN <<EOF
         openssh \
         vim
 
-    sudo rm --recursive /var/{cache/pacman/pkg,lib/pacman/sync}/*
+    rm --recursive /var/{cache/pacman/pkg,lib/pacman/sync}/*
 EOF
+
+USER ${USER_NAME}
