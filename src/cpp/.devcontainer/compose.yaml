@@ -2,9 +2,7 @@ services:
   devcontainer-cpp:
     build:
       dockerfile: ${IMAGE_VARIANT}.Dockerfile
-      network: host
       pull: true
-    network_mode: host
     working_dir: &workdir /workspaces/${PROJECT_NAME-}
     volumes:
       - type: bind
