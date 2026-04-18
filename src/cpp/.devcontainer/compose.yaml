@@ -27,6 +27,7 @@ services:
       - DISPLAY=${DISPLAY}
     devices:
       - /dev/dri:/dev/dri
+    uts: host
     volumes:
       - type: bind
         source: /tmp/.X11-unix
