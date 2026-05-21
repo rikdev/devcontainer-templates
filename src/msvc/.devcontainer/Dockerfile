@@ -46,9 +46,10 @@ EXPOSE 22
 RUN \
     Download-File \
         # https://learn.microsoft.com/en-us/visualstudio/releases/2026/release-history#release-dates-and-build-numbers
-        -Uri 'https://download.visualstudio.microsoft.com/download/pr/e2958987-8ee9-4455-a511-38b57476c363/295f41e6627b8c6cb651d90fec24fa5718116cbe8a5511c35c84a7c356712d9f/vs_BuildTools.exe' \
+        # Build Number 11819.183
+        -Uri 'https://download.visualstudio.microsoft.com/download/pr/3cfffe1b-b712-451e-9a6a-536ff231eb4b/72d390c5828fb0d8c2f4f16b253230e9016509a5a65f03faab903547012c3875/vs_BuildTools.exe' \
         -OutFile 'vs_buildtools.exe' \
-        -Hash '295f41e6627b8c6cb651d90fec24fa5718116cbe8a5511c35c84a7c356712d9f'; \
+        -Hash '72d390c5828fb0d8c2f4f16b253230e9016509a5a65f03faab903547012c3875'; \
     Start-Process -Wait -NoNewWindow \
         -FilePath 'vs_buildtools.exe' \
         -ArgumentList \
@@ -71,9 +72,9 @@ ENV CCACHE_DIR='C:\.ccache' \
 RUN \
     Write-Host 'Installing CMake...'; \
     Download-File \
-        -Uri 'https://github.com/Kitware/CMake/releases/download/v4.2.3/cmake-4.2.3-windows-x86_64.msi' \
+        -Uri 'https://github.com/Kitware/CMake/releases/download/v4.3.2/cmake-4.3.2-windows-x86_64.msi' \
         -OutFile 'cmake.msi' \
-        -Hash 'aa84ae115fc962c6691ec972548c7f7435bd9e7696c9d0487c8bd3a285277ed6'; \
+        -Hash '6915813bedf3a8a698b72fc858e0c2a99761be981745c3c3c99bd30e1477e142'; \
     Start-Process -Wait -NoNewWindow \
         -FilePath 'msiexec' \
         -ArgumentList '/quiet /norestart /package cmake.msi ADD_CMAKE_TO_PATH=System'; \
@@ -93,9 +94,9 @@ RUN \
 \
     Write-Host 'Installing ccache...'; \
     Download-File \
-        -Uri 'https://github.com/ccache/ccache/releases/download/v4.13.1/ccache-4.13.1-windows-x86_64.zip' \
+        -Uri 'https://github.com/ccache/ccache/releases/download/v4.13.6/ccache-4.13.6-windows-x86_64.zip' \
         -OutFile 'ccache.zip' \
-        -Hash '1c78a0b816a3174d4b170b96294e016a21fb4a577dfd8361e7322f77f85c6348'; \
+        -Hash '3d7cebb05850ad704e197b3f1d3f0f924ab6c9fdfc561578e146184fe9d89380'; \
     Expand-Archive -Path 'ccache.zip' -DestinationPath \"$env:ProgramFiles\"; \
     Move-Item -Path \"$env:ProgramFiles/ccache-*\" -Destination \"$env:ProgramFiles/ccache\"; \
     Remove-Item -Path 'ccache.zip', \"$env:ProgramFiles/ccache/*\" -Exclude '*.exe' -Recurse -Force; \
@@ -106,9 +107,9 @@ RUN \
 \
     Write-Host 'Installing Git...'; \
     Download-File \
-        -Uri 'https://github.com/git-for-windows/git/releases/download/v2.53.0.windows.2/Git-2.53.0.2-64-bit.tar.bz2' \
+        -Uri 'https://github.com/git-for-windows/git/releases/download/v2.54.0.windows.1/Git-2.54.0-64-bit.tar.bz2' \
         -OutFile 'git.tar.bz2' \
-        -Hash 'b17726d9b0041463a9e7b2bb98103cd6a18447d73b65e7b60c43e7d2fb5dea22'; \
+        -Hash 'e1819cee60d09793dde322cdb1170e03663c41cd9265cf45246219fc5e6aeecd'; \
     New-Item -Path \"$env:ProgramFiles\" -Name 'Git' -ItemType 'directory'; \
     Start-Process -Wait -NoNewWindow \
         -FilePath 'tar' \
@@ -126,9 +127,9 @@ RUN \
 \
     Write-Host 'Installing Python...'; \
     Download-File \
-        -Uri 'https://www.python.org/ftp/python/3.13.12/python-3.13.12-amd64.exe' \
+        -Uri 'https://www.python.org/ftp/python/3.14.5/python-3.14.5-amd64.exe' \
         -OutFile 'python-installer.exe' \
-        -Hash '96159fcb523ae404b707186a75b4104ee23851e476a5e838e14584cf1e03f981'; \
+        -Hash 'f9c09f5ed6f796fd1a8bc5ddfa41715a494b453c4781f0e35d5077cf9fa58f6d'; \
     Start-Process -Wait -NoNewWindow \
         -FilePath 'python-installer.exe' \
         -ArgumentList '/quiet InstallAllUsers=1 PrependPath=1 Shortcuts=0 Include_doc=0 Include_test=0'; \
@@ -138,15 +139,15 @@ RUN \
     Write-Host 'Installing Conan...'; \
     Start-Process -Wait -NoNewWindow \
         -FilePath 'pip' \
-        -ArgumentList 'install --no-cache-dir conan==2.26.2';
+        -ArgumentList 'install --no-cache-dir conan==2.28.1';
 
 # console utilities
 RUN \
     Write-Host 'Installing PowerShell...'; \
     Download-File \
-        -Uri 'https://github.com/PowerShell/PowerShell/releases/download/v7.5.5/PowerShell-7.5.5-win-x64.msi' \
+        -Uri 'https://github.com/PowerShell/PowerShell/releases/download/v7.6.1/PowerShell-7.6.1-win-x64.msi' \
         -OutFile 'powershell.msi' \
-        -Hash 'b2ac56b7639e2b259bb78bab077555d76f2a5eec6c516690d63de36bc1d6ca25'; \
+        -Hash '6b2118eb35379db159aa190ee2eb6721fe6b0e881b611429041ed13e8d8bea7b'; \
     Start-Process -Wait -NoNewWindow \
         -FilePath 'msiexec' \
         -ArgumentList '/quiet /norestart /package powershell.msi'; \
@@ -154,9 +155,9 @@ RUN \
 \
     Write-Host 'Installing Microsoft Edit...'; \
     Download-File \
-        -Uri 'https://github.com/microsoft/edit/releases/download/v1.2.1/edit-1.2.1-x86_64-windows.zip' \
+        -Uri 'https://github.com/microsoft/edit/releases/download/v2.0.0/edit-2.0.0-x86_64-windows.zip' \
         -OutFile 'edit.zip' \
-        -Hash 'be3affb7e5e0cd856fc0fb9c8b2004e9fbbc364e69797f7c2e9d8fcc94bfc4ff'; \
+        -Hash '97b8f2c667faea8f211af5f9c879602949164911d74d16f540bbe31ad46c14cb'; \
     Expand-Archive -Path 'edit.zip' -DestinationPath \"$env:ProgramFiles\"; \
     Move-Item -Path \"$env:ProgramFiles/edit-*\" -Destination \"$env:ProgramFiles/Edit\"; \
     Remove-Item -Path 'Edit.zip', \"$env:ProgramFiles/Edit/*\" -Exclude '*.exe' -Recurse -Force; \
