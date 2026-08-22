@@ -1,4 +1,5 @@
 {
+	"name": "Microsoft Visual C++",
 	"dockerComposeFile": ["compose.yaml", "compose.vscode.yaml"],
 	"service": "devcontainer-msvc",
 	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",

@@ -1,4 +1,5 @@
 {
+	"name": "C++",
 	"dockerComposeFile": ["compose.yaml", "compose.vscode.yaml"],
 	"service": "devcontainer-cpp-x11",
 	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
