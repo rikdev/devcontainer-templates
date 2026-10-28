@@ -44,6 +44,7 @@ RUN <<EOF
     apt-get install -y --no-install-recommends \
         bash-completion \
         clang-format \
+        curl \
         gdb \
         git \
         git-lfs \

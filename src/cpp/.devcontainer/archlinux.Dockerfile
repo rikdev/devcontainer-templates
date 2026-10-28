@@ -38,6 +38,7 @@ RUN <<EOF
     # console utilities
     pacman --sync --noconfirm --needed \
         bash-completion \
+        curl \
         diffutils \
         gdb \
         git \
