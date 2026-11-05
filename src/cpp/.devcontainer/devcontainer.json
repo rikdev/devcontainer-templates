@@ -6,6 +6,7 @@
 	"customizations": {
 		"vscode": {
 			"extensions": [
+				"llvm-vs-code-extensions.lldb-dap",
 				"ms-vscode.cpptools-extension-pack",
 				"ms-vscode.hexeditor",
 				"ms-vscode.makefile-tools"
